@@ -20,16 +20,22 @@ func NewCorrectQuizUseCase(questionsRepository repositories.QuestionsRepository)
 
 func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput, error) {
 
-	// questionIDs := make(map[int]bool)
+	questionIDs := make(map[int]bool)
 	rightsCount := 0
 	wrongsCount := 0
 	var quizTemplates []output.QuizTemplateOutput
 
 	for _, answer := range input.Answers {
+		if _, exists := questionIDs[answer.QuestionId]; exists {
+			return nil, fmt.Errorf("duplicate question ID: %d", answer.QuestionId)
+		}
+
+		questionIDs[answer.QuestionId] = true
 
 		question, _ := g.questionsRepository.FindQuestionById(answer.QuestionId)
 
 		correctAlternative, _ := question.GetCorrectAlternative()
+
 
 		if answer.Option == correctAlternative.Option {
 			rightsCount++
@@ -43,11 +49,6 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 			CorrectOption:  correctAlternative.Option,
 		})
 
-		// if _, exists := questionIDs[answer.QuestionId]; exists {
-		// 	return output.ResultOutput{}, fmt.Errorf("duplicate question ID: %d", answer.QuestionId)
-		// }
-
-		// questionIDs[answer.QuestionId] = true
 
 		// if err != nil {
 		// 	return output.ResultOutput{}, fmt.Errorf("error retrieving answer for question ID %d: %v", answer.QuestionId, err)
