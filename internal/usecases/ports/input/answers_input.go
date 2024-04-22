@@ -1,5 +1,6 @@
 package input
 
-type AnswersInput struct{
-	Answers []AnswerInput
+type AnswerInput struct {
+	QuestionId int
+	Option     string
 }

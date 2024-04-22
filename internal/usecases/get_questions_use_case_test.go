@@ -16,10 +16,10 @@ func TestExecuteShouldReturnTwoQuestions(t *testing.T) {
 
 	questions := getQuestions()
 	questionsRepository := mocks.NewQuestionsRepository(t)
-	questionsRepository.On("GetAll").Return(questions)
+	questionsRepository.On("GetAll").Return(&questions)
 
 	expectedResponse := getTwoQuestionsOutput()
-	getQuestionsUseCase := GetQuestionsUseCase(questionsRepository)	
+	getQuestionsUseCase := GetQuestionsUseCase(questionsRepository)
 
 	// act
 	response := getQuestionsUseCase.Execute()
@@ -28,8 +28,8 @@ func TestExecuteShouldReturnTwoQuestions(t *testing.T) {
 	g.Expect(response).To(Equal(expectedResponse))
 }
 
-func getQuestions() *[]entities.Question {
-	return &[]entities.Question{
+func getQuestions() []entities.Question {
+	return []entities.Question{
 		{
 			Id:   1,
 			Text: "What is the most abundant chemical element in the universe?",
@@ -76,14 +76,14 @@ func getTwoQuestionsOutput() []output.QuestionOutput {
 			Text: "What is the most abundant chemical element in the universe?",
 			Alternatives: []output.AlternativeOutput{
 				{
-					Id:        1,
-					Option:    "A",
-					Text:      "Oxygen",
+					Id:     1,
+					Option: "A",
+					Text:   "Oxygen",
 				},
 				{
-					Id:        2,
-					Option:    "B",
-					Text:      "Hydrogen",
+					Id:     2,
+					Option: "B",
+					Text:   "Hydrogen",
 				},
 			},
 		},
@@ -92,14 +92,14 @@ func getTwoQuestionsOutput() []output.QuestionOutput {
 			Text: "What was the first computer program to defeat a reigning world chess champion under tournament conditions?",
 			Alternatives: []output.AlternativeOutput{
 				{
-					Id:        3,
-					Option:    "A",
-					Text:      "Deep Blue",
+					Id:     3,
+					Option: "A",
+					Text:   "Deep Blue",
 				},
 				{
-					Id:        4,
-					Option:    "B",
-					Text:      "AlphaGo",
+					Id:     4,
+					Option: "B",
+					Text:   "AlphaGo",
 				},
 			},
 		},

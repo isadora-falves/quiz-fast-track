@@ -5,6 +5,6 @@ import (
 	"quiz-fast-track/internal/usecases/ports/output"
 )
 
-type GetResultUseCase interface {
-	Execute(input.AnswersInput) (output.ResultOutput, error)
+type CorrectQuizUseCase interface {
+	Execute(input.QuizInput) (*output.QuizOutput, error)
 }
