@@ -37,7 +37,6 @@ func (g *getResultUseCase) Execute(answers input.AnswersInput) (output.ResultOut
 		}
 		
 		// User should be able to answer all the questions and then post his/hers answers and get back how many correct answers they had, displayed to the user.
-		// na minha funçao do repository eu vou mandar a resposta do usuario e vou receber a alternativa corret
 		if answer.Option == correctAnswer.Option {
 			correctAnswersCount++
 		} else {
