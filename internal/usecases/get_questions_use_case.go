@@ -7,15 +7,19 @@ import (
 )
 
 type getQuestionsUseCase struct {
+	//estrutura de instaciamento
 	questionsRepository repositories.QuestionsRepository
 }
 
 func GetQuestionsUseCase(questionsRepository repositories.QuestionsRepository) contracts.GetQuestionsUseCase {
+	// passar o instanciamento para um objeto 
+	// ela tem a função de construtor do objeto
 	return &getQuestionsUseCase{
 		questionsRepository: questionsRepository,
 	}
 }
 
+// Composition estou atrelando a função ao objeto
 func (g *getQuestionsUseCase) Execute() []output.QuestionOutput {
 	questions := g.questionsRepository.GetAll()
 

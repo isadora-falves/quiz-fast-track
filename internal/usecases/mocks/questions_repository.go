@@ -33,6 +33,36 @@ func (_m *QuestionsRepository) GetAll() *[]entities.Question {
 	return r0
 }
 
+// GetAnswerById provides a mock function with given fields: id
+func (_m *QuestionsRepository) GetAnswerById(id int) (*entities.Alternative, error) {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAnswerById")
+	}
+
+	var r0 *entities.Alternative
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (*entities.Alternative, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(int) *entities.Alternative); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Alternative)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // NewQuestionsRepository creates a new instance of QuestionsRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewQuestionsRepository(t interface {
