@@ -10,7 +10,7 @@ type getQuestionsUseCase struct {
 	questionsRepository repositories.QuestionsRepository
 }
 
-func GetQuestionsUseCase(questionsRepository repositories.QuestionsRepository) contracts.GetQuestionsUseCase {
+func NewGetQuestionsUseCase(questionsRepository repositories.QuestionsRepository) contracts.GetQuestionsUseCase {
 	return &getQuestionsUseCase{
 		questionsRepository: questionsRepository,
 	}

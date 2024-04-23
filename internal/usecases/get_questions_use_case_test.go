@@ -19,7 +19,7 @@ func TestExecuteShouldReturnTwoQuestions(t *testing.T) {
 	questionsRepository.On("GetAll").Return(&questions)
 
 	expectedResponse := getTwoQuestionsOutput()
-	getQuestionsUseCase := GetQuestionsUseCase(questionsRepository)
+	getQuestionsUseCase := NewGetQuestionsUseCase(questionsRepository)
 
 	// act
 	response := getQuestionsUseCase.Execute()

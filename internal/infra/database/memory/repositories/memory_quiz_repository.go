@@ -1,4 +1,4 @@
-package memory
+package repositories
 
 import (
 	"quiz-fast-track/internal/entities"
