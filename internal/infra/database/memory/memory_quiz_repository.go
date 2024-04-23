@@ -6,29 +6,29 @@ import (
 )
 
 type memoryQuizRepository struct {
-	quizScores map[int]entities.QuizScore
+	quizScores *[]entities.QuizScore
 	nextID     int
 }
 
-func NewMemoryQuizRepository() repositories.QuizRepository {
+func NewMemoryQuizRepository(quizScores *[]entities.QuizScore) repositories.QuizRepository {
 	return &memoryQuizRepository{
-		quizScores: make(map[int]entities.QuizScore),
+		quizScores: quizScores,
 		nextID:     1,
 	}
 }
 
 func (m *memoryQuizRepository) GetAllScores() *[]float64 {
-	quizScores := make([]float64, 0, len(m.quizScores))
-	for _, quizScore := range m.quizScores {
-			quizScores = append(quizScores, quizScore.Score)
+	var scores []float64
+	for _, quizScore := range *m.quizScores {
+		scores = append(scores, quizScore.Score)
 	}
-	return &quizScores
+	return &scores
 }
 
 func (m *memoryQuizRepository) Save(quizScore entities.QuizScore) error {
 	quizScore.Id = m.nextID
-	m.quizScores[m.nextID] = quizScore
-	m.nextID++  
+	m.nextID++
+	*m.quizScores = append(*m.quizScores, quizScore)
 	return nil
 }
 
