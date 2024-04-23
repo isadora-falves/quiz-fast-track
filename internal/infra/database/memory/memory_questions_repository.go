@@ -31,8 +31,3 @@ func (m *memoryQuestionsRepository) FindQuestionById(id int) (*entities.Question
 	}
 	return &question, nil
 }
-
-func (m *memoryQuestionsRepository) SaveQuestion(question entities.Question) error {
-	m.questions[question.Id] = question
-	return nil
-}
