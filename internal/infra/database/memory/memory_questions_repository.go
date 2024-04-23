@@ -7,27 +7,24 @@ import (
 )
 
 type memoryQuestionsRepository struct {
-	questions map[int]entities.Question
+	questions *[]entities.Question
 }
 
-func NewMemoryQuestionsRepository() repositories.QuestionsRepository {
+func NewMemoryQuestionsRepository(questions *[]entities.Question) repositories.QuestionsRepository {
 	return &memoryQuestionsRepository{
-		questions: make(map[int]entities.Question),
+		questions: questions,
 	}
 }
 
 func (m *memoryQuestionsRepository) GetAll() *[]entities.Question {
-	questions := make([]entities.Question, 0, len(m.questions))
-	for _, question := range m.questions {
-			questions = append(questions, question)
-	}
-	return &questions
+	return m.questions
 }
 
 func (m *memoryQuestionsRepository) FindQuestionById(id int) (*entities.Question, error) {
-	question, exists := m.questions[id]
-	if !exists {
-		return nil, errors.New("question not found")
+	for _, question := range *m.questions {
+		if question.Id == id {
+			return &question, nil
+		}
 	}
-	return &question, nil
+	return nil, errors.New("question not found")
 }

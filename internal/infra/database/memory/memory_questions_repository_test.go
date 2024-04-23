@@ -16,16 +16,10 @@ func TestMemoryQuestionsRepositoryGetAll(t *testing.T) {
 		{Id: 3, Text: "Question 3"},
 	}
 
-	repo := NewMemoryQuestionsRepository()
-
-	repo.(*memoryQuestionsRepository).questions = make(map[int]entities.Question)
-
-	for _, question := range questions {
-		repo.(*memoryQuestionsRepository).questions[question.Id] = question
-	}
+	repo := NewMemoryQuestionsRepository(&questions)
 
 	got := repo.GetAll()
-	g.Expect(got).To(Equal(&questions))
+	g.Expect(*got).To(Equal(questions))
 }
 
 func TestMemoryQuestionsRepositoryFindQuestionById(t *testing.T) {
@@ -35,11 +29,7 @@ func TestMemoryQuestionsRepositoryFindQuestionById(t *testing.T) {
 			{Id: 3, Text: "Question 3"},
 	}
 
-	repo := NewMemoryQuestionsRepository()
-	repo.(*memoryQuestionsRepository).questions = make(map[int]entities.Question)
-	for _, question := range questions {
-			repo.(*memoryQuestionsRepository).questions[question.Id] = question
-	}
+	repo := NewMemoryQuestionsRepository(&questions)
 
 	tests := []struct {
 			name    string
