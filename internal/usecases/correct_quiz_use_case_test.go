@@ -14,10 +14,14 @@ func TestReturnCorrectResponse(t *testing.T) {
 	g := NewWithT(t)
 
 	questions := getQuestions()
+	quizScores := &[]float64{0.5, 0.36, 0.66, 0.75, 0.9}
 
 	questionsRepository := mocks.NewQuestionsRepository(t)
 	questionsRepository.On("FindQuestionById", 1).Return(&questions[0], nil)
 	questionsRepository.On("FindQuestionById", 2).Return(&questions[1], nil)
+	
+	quizRepository := mocks.NewQuizRepository(t)
+	quizRepository.On("GetAllScores").Return(quizScores, nil)
 
 	input := input.QuizInput{
 		User: "Isadora Alves",
@@ -34,7 +38,7 @@ func TestReturnCorrectResponse(t *testing.T) {
 	}
 
 	expectedResponse := getCorrectQuizResponse()
-	correctQuizUseCase := NewCorrectQuizUseCase(questionsRepository)
+	correctQuizUseCase := NewCorrectQuizUseCase(questionsRepository, quizRepository)
 
 	// act
 	response, err := correctQuizUseCase.Execute(input)
@@ -54,6 +58,8 @@ func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 	questionsRepository.On("FindQuestionById", 1).Return(&questions[0], nil)
 	questionsRepository.On("FindQuestionById", 1).Return(&questions[1], nil)
 
+	quizRepository := mocks.NewQuizRepository(t)
+
 	input := input.QuizInput{
 		User: "Isadora Alves",
 		Answers: []input.AnswerInput{
@@ -68,7 +74,7 @@ func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 		},
 	}
 
-	correctQuizUseCase := NewCorrectQuizUseCase(questionsRepository)
+	correctQuizUseCase := NewCorrectQuizUseCase(questionsRepository, quizRepository)
 
 	// act
 	response, err := correctQuizUseCase.Execute(input)
@@ -78,9 +84,10 @@ func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 	g.Expect(err).ToNot(BeNil())
 }
 
+
 func getCorrectQuizResponse() *output.QuizOutput {
 	return &output.QuizOutput{
-		Resume:       "You answered 1 question correctly out of 2. You made 1 error.",
+		Resume:       "You answered 1 question correctly out of 2. You made 1 error. You were better than 20% of all quizzers",
 		RightAnswers: 1,
 		WrongAnswers: 1,
 		QuizTemplate: []output.QuizTemplateOutput{
