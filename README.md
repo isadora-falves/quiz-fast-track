@@ -1,4 +1,8 @@
 # Quiz-Fast-Track API
+<p align="center">
+  <img src="https://github.com/isadora-falves/quiz-fast-track/assets/77645495/dc696716-0b3c-41d9-beac-8660f2621573" width="50%" height="auto" alt="Quiz-Fast-Track API">
+</p>
+
 
 Welcome to the Quiz-Fast-Track API, a Go application designed for taking quizzes and tracking scores. This project was developed as a solution for a test proposed by Fast-Track Engineering.
 
