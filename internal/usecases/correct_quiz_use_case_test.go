@@ -20,7 +20,7 @@ func TestReturnCorrectResponse(t *testing.T) {
 	questionsRepository := mocks.NewQuestionsRepository(t)
 	questionsRepository.On("FindQuestionById", 1).Return(&questions[0], nil)
 	questionsRepository.On("FindQuestionById", 2).Return(&questions[1], nil)
-	
+
 	quizRepository := mocks.NewQuizRepository(t)
 	quizRepository.On("GetAllScores").Return(quizScores, nil)
 

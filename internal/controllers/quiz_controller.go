@@ -75,7 +75,7 @@ func (qc *quizController) Correct(ctx *gin.Context) {
 		User:    request.User,
 		Answers: convertedAnswers,
 	}
-	
+
 	correctedQuiz, err := qc.correctQuizUseCase.Execute(quizInput)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
