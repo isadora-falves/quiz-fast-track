@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  quiz-fast-tracker:
+    container_name: quiz-fast-tracker
+    build: .
+    volumes:
+      - ./:/go/src/app
+    ports:
+            - "3000:3000"
+    working_dir: /go/src/app
+    tty: true

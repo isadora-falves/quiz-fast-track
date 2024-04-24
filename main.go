@@ -96,28 +96,25 @@ func main() {
 	r := gin.Default()
 	v1 := r.Group("api/v1")
 
-	// Define the endpoint for retrieving questions
-	// @Summary Retrieve all questions
-	// @Description get questions
-	// @Produce json
-	// @Success 200 {array} entities::Question
-	// @Router /questions [get]
-	v1.GET("/questions", func(c *gin.Context) {
-		questions := getQuestionsUseCase.Execute()
-		c.JSON(http.StatusOK, questions)
-	})
+// @Summary Retrieve all questions
+// @Description get questions
+// @Produce json
+// @Success 200 {array} entities::Question
+// @Router /questions [get]
+v1.GET("/questions", func(c *gin.Context) {
+	questions := getQuestionsUseCase.Execute()
+	c.JSON(http.StatusOK, questions)
+})
 
-		// Define the endpoint for quiz correction
-		// @Summary Correct quiz and return score
-		// @Description get quiz score
-		// @Produce json
-		// @Success 200 {object} entities::QuizScore
-		// @Router /quiz [get]
-		v1.GET("/quiz", func(c *gin.Context) {
-			quizOutput, _ := correctQuizUseCase.Execute(input.QuizInput{})
-
-			c.JSON(http.StatusOK, quizOutput)
-		})
+// @Summary Correct quiz and return score
+// @Description get quiz score
+// @Produce json
+// @Success 200 {object} entities::QuizScore
+// @Router /quiz [get]
+v1.GET("/quiz", func(c *gin.Context) {
+	quizOutput, _ := correctQuizUseCase.Execute(input.QuizInput{})
+	c.JSON(http.StatusOK, quizOutput)
+})
 		
 		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		r.Run(":3000")
