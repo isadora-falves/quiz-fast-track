@@ -76,7 +76,11 @@ func (qc *quizController) Correct(ctx *gin.Context) {
 		Answers: convertedAnswers,
 	}
 	
-	correctedQuiz, _ := qc.correctQuizUseCase.Execute(quizInput)
+	correctedQuiz, err := qc.correctQuizUseCase.Execute(quizInput)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	quizTemplateResponses := ConverQuizTemplatetResponse(correctedQuiz.QuizTemplate)
 
