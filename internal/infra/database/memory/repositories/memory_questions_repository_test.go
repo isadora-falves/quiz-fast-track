@@ -9,6 +9,7 @@ import (
 )
 
 func TestMemoryQuestionsRepositoryGetAll(t *testing.T) {
+	// Arrange
 	g := NewGomegaWithT(t)
 	questions := []entities.Question{
 		{Id: 1, Text: "Question 1"},
@@ -18,15 +19,41 @@ func TestMemoryQuestionsRepositoryGetAll(t *testing.T) {
 
 	repo := NewMemoryQuestionsRepository(&questions)
 
-	got := repo.GetAll()
-	g.Expect(*got).To(Equal(questions))
+	// Act
+	response := repo.GetAll()
+
+	// Assert
+	g.Expect(*response).To(Equal(questions))
 }
 
-func TestMemoryQuestionsRepositoryFindQuestionById(t *testing.T) {
-	g := NewGomegaWithT(t)
+func TestFindQuestionByIdReturnsOneQuestion(t *testing.T) {
+	// Arrange
+	g := NewWithT(t)
 	questions := []entities.Question{
-			{Id: 1, Text: "Question 1"},
-			{Id: 2, Text: "Question 2"},
+		{Id: 1, Text: "Question 1"},
+		{Id: 2, Text: "Question 2"},
+	}
+	repo := NewMemoryQuestionsRepository(&questions)
+
+	expectedResponse := &entities.Question{
+		Id:   2,
+		Text: "Question 2",
+	}
+
+	// Act
+	response, err := repo.FindQuestionById(2)
+
+	// Assert
+	g.Expect(err).To(BeNil())
+	g.Expect(response).To(Equal(expectedResponse))
+}
+
+func TestFindQuestionByIdReturnsError(t *testing.T) {
+	// Arrange
+	g := NewWithT(t)
+	questions := []entities.Question{
+		{Id: 1, Text: "Question 1"},
+		{Id: 2, Text: "Question 2"},
 	}
 	repo := NewMemoryQuestionsRepository(&questions)
 
@@ -37,4 +64,3 @@ func TestMemoryQuestionsRepositoryFindQuestionById(t *testing.T) {
 	g.Expect(err).To(MatchError(errors.New("question not found")))
 	g.Expect(got).To(BeNil())
 }
-

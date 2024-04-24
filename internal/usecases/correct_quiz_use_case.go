@@ -12,13 +12,16 @@ import (
 
 type correctQuizUseCase struct {
 	questionsRepository repositories.QuestionsRepository
-	quizRepository repositories.QuizRepository
+	quizRepository      repositories.QuizRepository
 }
 
-func NewCorrectQuizUseCase(questionsRepository repositories.QuestionsRepository, quizRepository repositories.QuizRepository ) contracts.CorrectQuizUseCase {
+func NewCorrectQuizUseCase(
+	questionsRepository repositories.QuestionsRepository,
+	quizRepository repositories.QuizRepository,
+) contracts.CorrectQuizUseCase {
 	return &correctQuizUseCase{
 		questionsRepository: questionsRepository,
-		quizRepository: quizRepository,
+		quizRepository:      quizRepository,
 	}
 }
 
@@ -39,7 +42,6 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 		question, _ := g.questionsRepository.FindQuestionById(answer.QuestionId)
 
 		correctAlternative, _ := question.GetCorrectAlternative()
-
 
 		if answer.Option == correctAlternative.Option {
 			rightsCount++
@@ -64,8 +66,8 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 	rate := (float64(position) / float64(len(*scores)) * 100.0)
 
 	g.quizRepository.Save(entities.QuizScore{
-		UserName:  input.User,
-		Score: userScore,
+		UserName: input.User,
+		Score:    userScore,
 	})
 
 	return &output.QuizOutput{
