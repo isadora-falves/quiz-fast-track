@@ -1,8 +1,6 @@
 package memory
 
-import (
-	"quiz-fast-track/internal/entities"
-)
+import "quiz-fast-track/internal/entities"
 
 func LoadQuestions() []entities.Question {
 	return []entities.Question{
@@ -13,16 +11,19 @@ func LoadQuestions() []entities.Question {
 				{
 					Id:        1,
 					Text:      "Paris",
+					Option:		"A",
 					IsCorrect: true,
 				},
 				{
 					Id:        2,
 					Text:      "London",
+					Option:		"B",
 					IsCorrect: false,
 				},
 				{
 					Id:        3,
 					Text:      "Madrid",
+					Option:		"C",
 					IsCorrect: false,
 				},
 			},
@@ -34,16 +35,19 @@ func LoadQuestions() []entities.Question {
 				{
 					Id:        1,
 					Text:      "Paris",
+					Option:		"A",
 					IsCorrect: false,
 				},
 				{
 					Id:        2,
 					Text:      "London",
+					Option:		"B",
 					IsCorrect: false,
 				},
 				{
 					Id:        3,
 					Text:      "Madrid",
+					Option:		"C",
 					IsCorrect: true,
 				},
 			},

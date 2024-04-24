@@ -1,11 +1,10 @@
 package main
 
 import (
-	"net/http"
+	"quiz-fast-track/internal/controllers"
 	"quiz-fast-track/internal/infra/database/memory"
 	"quiz-fast-track/internal/infra/database/memory/repositories"
 	"quiz-fast-track/internal/usecases"
-	"quiz-fast-track/internal/usecases/ports/input"
 
 	_ "quiz-fast-track/docs"
 
@@ -30,28 +29,14 @@ func main() {
 	getQuestionsUseCase := usecases.NewGetQuestionsUseCase(memoryQuestionsRepository)
 	correctQuizUseCase := usecases.NewCorrectQuizUseCase(memoryQuestionsRepository, memoryQuizRepository)
 
+	quizController := controllers.NewQuizController(correctQuizUseCase, getQuestionsUseCase)
+
 	r := gin.Default()
 	v1 := r.Group("api/v1")
 
-	// @Summary Retrieve all questions
-	// @Description get questions
-	// @Produce json
-	// @Success 200 {array} entities::Question
-	// @Router /questions [get]
-	v1.GET("/questions", func(c *gin.Context) {
-		questions := getQuestionsUseCase.Execute()
-		c.JSON(http.StatusOK, questions)
-	})
+	v1.GET("/questions", quizController.Get)
 
-	// @Summary Correct quiz and return score
-	// @Description get quiz score
-	// @Produce json
-	// @Success 200 {object} entities::QuizScore
-	// @Router /quiz [get]
-	v1.POST("/quiz", func(c *gin.Context) {
-		quizOutput, _ := correctQuizUseCase.Execute(input.QuizInput{})
-		c.JSON(http.StatusOK, quizOutput)
-	})
+	v1.POST("/quiz", quizController.Correct)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":3000")

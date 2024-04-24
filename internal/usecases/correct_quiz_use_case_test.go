@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestReturnCorrectResponse(t *testing.T) {
@@ -23,18 +24,20 @@ func TestReturnCorrectResponse(t *testing.T) {
 	quizRepository := mocks.NewQuizRepository(t)
 	quizRepository.On("GetAllScores").Return(quizScores, nil)
 
+	quizRepository.On("Save", mock.Anything).Return(nil)
+
 	input := input.QuizInput{
-		User: "Isadora Alves",
-		Answers: []input.AnswerInput{
-			{
-				QuestionId: 1,
-				Option:     "B",
+			User: "Isadora Alves",
+			Answers: []input.AnswerInput{
+					{
+							QuestionId: 1,
+							Option:     "B",
+					},
+					{
+							QuestionId: 2,
+							Option:     "B",
+					},
 			},
-			{
-				QuestionId: 2,
-				Option:     "B",
-			},
-		},
 	}
 
 	expectedResponse := getCorrectQuizResponse()
@@ -44,9 +47,10 @@ func TestReturnCorrectResponse(t *testing.T) {
 	response, err := correctQuizUseCase.Execute(input)
 
 	// assert
-	g.Expect(response).To(Equal(expectedResponse))
+	g.Expect(expectedResponse).To(Equal(response))
 	g.Expect(err).To(BeNil())
 }
+
 
 func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 	// arrange
@@ -87,7 +91,7 @@ func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 
 func getCorrectQuizResponse() *output.QuizOutput {
 	return &output.QuizOutput{
-		Resume:       "You answered 1 question correctly out of 2. You made 1 error. You were better than 20% of all quizzers",
+		Resume:       "You answered 1 question correctly out of 2. You made 1 error. You were better than 100% of all quizzers",
 		RightAnswers: 1,
 		WrongAnswers: 1,
 		QuizTemplate: []output.QuizTemplateOutput{

@@ -26,7 +26,6 @@ func NewCorrectQuizUseCase(
 }
 
 func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput, error) {
-
 	questionIDs := make(map[int]bool)
 	rightsCount := 0
 	wrongsCount := 0
@@ -56,7 +55,7 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 		})
 	}
 
-	userScore := float64(rightsCount) / float64(len(input.Answers))
+	userScore := (float64(rightsCount) / float64(len(input.Answers))) * 10
 
 	scores := g.quizRepository.GetAllScores()
 	sort.Float64s(*scores)
