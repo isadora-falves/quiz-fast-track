@@ -57,6 +57,5 @@ The application is structured using a clean architecture approach with four main
 
 ## Authors
 
-- **Isadora Alves** - Initial work - [IsadoraAlves](https://github.com/IsadoraAlves)
+- **Isadora Alves** - Initial work - [IsadoraAlves](https://github.com/isadora-falves)
 
-See also the list of [contributors](CONTRIBUTORS.md) who participated in this project.
