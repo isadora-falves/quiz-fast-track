@@ -26,16 +26,16 @@ func (g *getQuestionsUseCase) Execute() []output.QuestionOutput {
 		var alternativesOutPut []output.AlternativeOutput
 		for _, alternative := range question.Alternatives {
 			alternativeOutPut := output.AlternativeOutput{
-				Id: 			alternative.Id,
-				Option: 		alternative.Option,
-				Text: 			alternative.Text,
+				Id:     alternative.Id,
+				Option: alternative.Option,
+				Text:   alternative.Text,
 			}
 			alternativesOutPut = append(alternativesOutPut, alternativeOutPut)
 		}
 		questionOutput := output.QuestionOutput{
-			Id: 			question.Id,
-			Text: 			question.Text,
-			Alternatives: 	alternativesOutPut,
+			Id:           question.Id,
+			Text:         question.Text,
+			Alternatives: alternativesOutPut,
 		}
 		questionsOutput = append(questionsOutput, questionOutput)
 	}

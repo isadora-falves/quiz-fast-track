@@ -99,24 +99,23 @@ func ConvertAnswerRequestsToAnswerInputs(requests []requests.AnswerRequest) []in
 	var inputs []input.AnswerInput
 	for _, req := range requests {
 		input := input.AnswerInput{
-			QuestionId:     req.QuestionId,
-			Option: req.Option,
+			QuestionId: req.QuestionId,
+			Option:     req.Option,
 		}
 		inputs = append(inputs, input)
 	}
 	return inputs
 }
 
-
 func ConverQuizTemplatetResponse(outputs []output.QuizTemplateOutput) []responses.QuizResponse {
 	var quizResponses []responses.QuizResponse
 	for _, out := range outputs {
-			quizResponse := responses.QuizResponse{
-					QuestionId:     out.QuestionId,
-					SelectedOption: out.SelectedOption,
-					CorrectOption:  out.CorrectOption,
-			}
-			quizResponses = append(quizResponses, quizResponse)
+		quizResponse := responses.QuizResponse{
+			QuestionId:     out.QuestionId,
+			SelectedOption: out.SelectedOption,
+			CorrectOption:  out.CorrectOption,
+		}
+		quizResponses = append(quizResponses, quizResponse)
 	}
 	return quizResponses
 }

@@ -33,4 +33,3 @@ func (m *memoryQuizRepository) Save(quizScore entities.QuizScore) error {
 	*m.quizScores = append(*m.quizScores, quizScore)
 	return nil
 }
-

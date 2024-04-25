@@ -27,17 +27,17 @@ func TestReturnCorrectResponse(t *testing.T) {
 	quizRepository.On("Save", mock.Anything).Return(nil)
 
 	input := input.QuizInput{
-			User: "Isadora Alves",
-			Answers: []input.AnswerInput{
-					{
-							QuestionId: 1,
-							Option:     "B",
-					},
-					{
-							QuestionId: 2,
-							Option:     "B",
-					},
+		User: "Isadora Alves",
+		Answers: []input.AnswerInput{
+			{
+				QuestionId: 1,
+				Option:     "B",
 			},
+			{
+				QuestionId: 2,
+				Option:     "B",
+			},
+		},
 	}
 
 	expectedResponse := getCorrectQuizResponse()
@@ -50,7 +50,6 @@ func TestReturnCorrectResponse(t *testing.T) {
 	g.Expect(expectedResponse).To(Equal(response))
 	g.Expect(err).To(BeNil())
 }
-
 
 func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 	// arrange
@@ -87,7 +86,6 @@ func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 	g.Expect(response).To(BeNil())
 	g.Expect(err).ToNot(BeNil())
 }
-
 
 func getCorrectQuizResponse() *output.QuizOutput {
 	return &output.QuizOutput{
