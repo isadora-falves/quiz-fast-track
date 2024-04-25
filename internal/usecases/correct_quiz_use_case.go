@@ -39,9 +39,17 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 
 		questionIDs[answer.QuestionId] = true
 
-		question, _ := g.questionsRepository.FindQuestionById(answer.QuestionId)
+		question, error := g.questionsRepository.FindQuestionById(answer.QuestionId)
 
-		correctAlternative, _ := question.GetCorrectAlternative()
+		if error != nil {
+			return nil, error
+		}
+
+		correctAlternative, error := question.GetCorrectAlternative()
+
+		if error != nil {
+			return nil, error
+		}
 
 		if answer.Option == correctAlternative.Option {
 			rightsCount++
@@ -71,7 +79,15 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 	})
 
 	return &output.QuizOutput{
-		Resume:       fmt.Sprintf("You answered %d question correctly out of %d. You made %d error. You were better than %.f%% of all quizzers", rightsCount, len(input.Answers), wrongsCount, rate),
+		Resume: fmt.Sprintf(
+			"You answered %d question correctly out of %d. "+
+				"You made %d error. "+
+				"You were better than %.f%% of all quizzers",
+			rightsCount,
+			len(input.Answers),
+			wrongsCount,
+			rate,
+		),
 		RightAnswers: rightsCount,
 		WrongAnswers: wrongsCount,
 		QuizTemplate: quizTemplates,
