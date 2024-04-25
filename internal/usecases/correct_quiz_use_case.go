@@ -26,7 +26,7 @@ func NewCorrectQuizUseCase(
 }
 
 // Execute corrects the quiz and returns the result
-func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput, error) {
+func (uc *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput, error) {
 	questionIDs := make(map[int]bool)
 	rightsCount := 0
 	wrongsCount := 0
@@ -34,21 +34,21 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 
 	for _, answer := range input.Answers {
 		if _, exists := questionIDs[answer.QuestionId]; exists {
-			return nil, fmt.Errorf("duplicate question ID: %d", answer.QuestionId)
+			return nil, fmt.Errorf("duplicated question ID: %d", answer.QuestionId)
 		}
 
 		questionIDs[answer.QuestionId] = true
 
-		question, error := g.questionsRepository.FindQuestionById(answer.QuestionId)
+		question, err := uc.questionsRepository.FindQuestionById(answer.QuestionId)
 
-		if error != nil {
-			return nil, error
+		if err != nil {
+			return nil, err
 		}
 
-		correctAlternative, error := question.GetCorrectAlternative()
+		correctAlternative, err := question.GetCorrectAlternative()
 
-		if error != nil {
-			return nil, error
+		if err != nil {
+			return nil, err
 		}
 
 		if answer.Option == correctAlternative.Option {
@@ -64,38 +64,39 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 		})
 	}
 
-	userScore := (float64(rightsCount) / float64(len(input.Answers))) * 10
-
-	scores := g.quizRepository.GetAllScores()
-	sort.Float64s(*scores)
-
-	position := g.binarySearch(*scores, userScore)
-
-	rate := (float64(position) / float64(len(*scores)) * 100.0)
-
-	g.quizRepository.Save(entities.QuizScore{
-		UserName: input.User,
-		Score:    userScore,
-	})
+	userScore := uc.calculateUserScore(rightsCount, len(input.Answers))
+	uc.saveQuizScore(input.User, userScore)
+	rate := uc.calculateSuccessRate(userScore)
 
 	return &output.QuizOutput{
-		Resume: fmt.Sprintf(
-			"You answered %d question correctly out of %d. "+
-				"You made %d error. "+
-				"You were better than %.f%% of all quizzers",
-			rightsCount,
-			len(input.Answers),
-			wrongsCount,
-			rate,
-		),
+		Resume:       fmt.Sprintf("You were better than %.f%% of all quizzers", rate),
 		RightAnswers: rightsCount,
 		WrongAnswers: wrongsCount,
 		QuizTemplate: quizTemplates,
 	}, nil
 }
 
+func (uc *correctQuizUseCase) calculateUserScore(rightsCount, totalAnswers int) float64 {
+	return (float64(rightsCount) / float64(totalAnswers)) * 10
+}
+
+func (uc *correctQuizUseCase) calculateSuccessRate(userScore float64) float64 {
+	scores := uc.quizRepository.GetAllScores()
+	sort.Float64s(*scores)
+
+	position := uc.binarySearch(*scores, userScore)
+	return (float64(position) / float64(len(*scores))) * 100.0
+}
+
+func (uc *correctQuizUseCase) saveQuizScore(userName string, score float64) {
+	uc.quizRepository.Save(entities.QuizScore{
+		UserName: userName,
+		Score:    score,
+	})
+}
+
 // binarySearch returns the index of the userScore in the scores array
-func (g *correctQuizUseCase) binarySearch(scores []float64, userScore float64) int {
+func (uc *correctQuizUseCase) binarySearch(scores []float64, userScore float64) int {
 	low := 0
 	high := len(scores) - 1
 	for low <= high {

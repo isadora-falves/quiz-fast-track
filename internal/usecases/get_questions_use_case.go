@@ -17,8 +17,8 @@ func NewGetQuestionsUseCase(questionsRepository repositories.QuestionsRepository
 }
 
 // Composition estou atrelando a função ao objeto
-func (g *getQuestionsUseCase) Execute() []output.QuestionOutput {
-	questions := g.questionsRepository.GetAll()
+func (uc *getQuestionsUseCase) Execute() []output.QuestionOutput {
+	questions := uc.questionsRepository.GetAll()
 
 	var questionsOutput []output.QuestionOutput
 

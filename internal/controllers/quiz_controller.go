@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"quiz-fast-track/internal/controllers/requests"
 	"quiz-fast-track/internal/controllers/responses"
@@ -62,60 +61,61 @@ func (qc *quizController) Get(ctx *gin.Context) {
 // @Description correct a quiz
 // @Produce json
 // @Router /quiz [post]
-// @Param correct body requests.CorrectRequest true "Correct Request"
-// @Success 200 {object} responses.CorrectResponse
+// @Param correct body requests.QuizRequest true "Correct Request"
+// @Success 200 {object} responses.QuizResponse
 func (qc *quizController) Correct(ctx *gin.Context) {
-	var request requests.CorrectRequest
-	fmt.Println(request)
-	fmt.Println(ctx.BindJSON(&request))
-	fmt.Println(ctx.Params)
+	var request requests.QuizRequest
 
-	convertedAnswers := ConvertAnswerRequestsToAnswerInputs(request.Answers)
-	quizInput := input.QuizInput{
-		User:    request.User,
-		Answers: convertedAnswers,
-	}
-
-	correctedQuiz, err := qc.correctQuizUseCase.Execute(quizInput)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
 
-	quizTemplateResponses := ConverQuizTemplatetResponse(correctedQuiz.QuizTemplate)
+	input := qc.createQuizInput(request)
 
-	response := responses.CorrectResponse{
-		Resume:       correctedQuiz.Resume,
-		RightAnswers: correctedQuiz.RightAnswers,
-		WrongAnswers: correctedQuiz.WrongAnswers,
-		QuizTemplate: quizTemplateResponses,
+	output, err := qc.correctQuizUseCase.Execute(input)
+
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
 	}
 
-	// Send the response
+	response := qc.createQuizSuccessResponse(output)
+
 	ctx.JSON(http.StatusOK, response)
 }
 
-func ConvertAnswerRequestsToAnswerInputs(requests []requests.AnswerRequest) []input.AnswerInput {
-	var inputs []input.AnswerInput
-	for _, req := range requests {
-		input := input.AnswerInput{
+func (qc *quizController) createQuizInput(request requests.QuizRequest) input.QuizInput {
+	var answers []input.AnswerInput
+
+	for _, req := range request.Answers {
+		answers = append(answers, input.AnswerInput{
 			QuestionId: req.QuestionId,
 			Option:     req.Option,
-		}
-		inputs = append(inputs, input)
+		})
 	}
-	return inputs
+
+	return input.QuizInput{
+		User:    request.User,
+		Answers: answers,
+	}
 }
 
-func ConverQuizTemplatetResponse(outputs []output.QuizTemplateOutput) []responses.QuizResponse {
-	var quizResponses []responses.QuizResponse
-	for _, out := range outputs {
-		quizResponse := responses.QuizResponse{
-			QuestionId:     out.QuestionId,
-			SelectedOption: out.SelectedOption,
-			CorrectOption:  out.CorrectOption,
+func (qc *quizController) createQuizSuccessResponse(output *output.QuizOutput) responses.QuizResponse {
+	var quizResponses []responses.QuizTemplateResponse
+	for _, template := range output.QuizTemplate {
+		quizTemplate := responses.QuizTemplateResponse{
+			QuestionId:     template.QuestionId,
+			SelectedOption: template.SelectedOption,
+			CorrectOption:  template.CorrectOption,
 		}
-		quizResponses = append(quizResponses, quizResponse)
+		quizResponses = append(quizResponses, quizTemplate)
 	}
-	return quizResponses
+
+	return responses.QuizResponse{
+		Resume:       output.Resume,
+		RightAnswers: output.RightAnswers,
+		WrongAnswers: output.WrongAnswers,
+		QuizTemplate: quizResponses,
+	}
 }

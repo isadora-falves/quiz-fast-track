@@ -89,7 +89,7 @@ func TestReturnWhenWeHaveDuplicateAnswers(t *testing.T) {
 
 func getCorrectQuizResponse() *output.QuizOutput {
 	return &output.QuizOutput{
-		Resume:       "You answered 1 question correctly out of 2. You made 1 error. You were better than 100% of all quizzers",
+		Resume:       "You were better than 100% of all quizzers",
 		RightAnswers: 1,
 		WrongAnswers: 1,
 		QuizTemplate: []output.QuizTemplateOutput{
