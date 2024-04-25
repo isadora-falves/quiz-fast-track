@@ -2,6 +2,7 @@ package memory
 
 import "quiz-fast-track/internal/entities"
 
+// Load questions in memory
 func LoadQuestions() []entities.Question {
 	return []entities.Question{
 		{
@@ -55,6 +56,7 @@ func LoadQuestions() []entities.Question {
 	}
 }
 
+// Load quiz scores in memory
 func LoadQuizScores() []entities.QuizScore {
 	return []entities.QuizScore{
 		{

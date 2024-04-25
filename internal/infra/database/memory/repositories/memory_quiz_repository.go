@@ -17,6 +17,7 @@ func NewMemoryQuizRepository(quizScores *[]entities.QuizScore) repositories.Quiz
 	}
 }
 
+// GetAllScores returns all quiz scores
 func (m *memoryQuizRepository) GetAllScores() *[]float64 {
 	var scores []float64
 	for _, quizScore := range *m.quizScores {
@@ -25,6 +26,7 @@ func (m *memoryQuizRepository) GetAllScores() *[]float64 {
 	return &scores
 }
 
+// Save saves a quiz score
 func (m *memoryQuizRepository) Save(quizScore entities.QuizScore) error {
 	quizScore.Id = m.nextID
 	m.nextID++

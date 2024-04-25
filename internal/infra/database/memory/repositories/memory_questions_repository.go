@@ -16,10 +16,12 @@ func NewMemoryQuestionsRepository(questions *[]entities.Question) repositories.Q
 	}
 }
 
+// GetAll returns all questions
 func (m *memoryQuestionsRepository) GetAll() *[]entities.Question {
 	return m.questions
 }
 
+// FindQuestionById returns a question by id
 func (m *memoryQuestionsRepository) FindQuestionById(id int) (*entities.Question, error) {
 	for _, question := range *m.questions {
 		if question.Id == id {

@@ -1,7 +1,7 @@
 package entities
 
 type QuizScore struct {
-	Id	 int
+	Id	         int
 	UserName		 string
 	Score		     float64
 }

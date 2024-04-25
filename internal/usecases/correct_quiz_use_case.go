@@ -25,6 +25,7 @@ func NewCorrectQuizUseCase(
 	}
 }
 
+// Execute corrects the quiz and returns the result
 func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput, error) {
 	questionIDs := make(map[int]bool)
 	rightsCount := 0
@@ -77,6 +78,7 @@ func (g *correctQuizUseCase) Execute(input input.QuizInput) (*output.QuizOutput,
 	}, nil
 }
 
+// binarySearch returns the index of the userScore in the scores array
 func (g *correctQuizUseCase) binarySearch(scores []float64, userScore float64) int {
 	low := 0
 	high := len(scores) - 1
